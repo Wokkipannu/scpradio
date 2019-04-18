@@ -1,13 +1,14 @@
 {
   "name": "scp-185",
   "version": "1.0.0",
-  "description": "",
+  "description": "Discord bot that has only one purpose. To play SCP Radio song.",
   "main": "scp.js",
   "scripts": {
+    "start": "node scp",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Wokkipannu",
   "license": "ISC",
   "dependencies": {
     "discord.js": "^11.4.2",
