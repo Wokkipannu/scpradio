@@ -92,6 +92,8 @@ client.on('message', msg => {
     }
     // If command is to leave
     if (msg.content === '.scp leave') {
+      let connection = connections.get(msg.guild.id);
+      connection.channel.leave();
       connections.delete(msg.guild.id);
       msg.reply('Radio has left the facility');
     }
