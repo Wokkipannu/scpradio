@@ -77,3 +77,6 @@ typings/
 
 # Configuration
 config.json
+
+# Do not include sounds
+sounds/*

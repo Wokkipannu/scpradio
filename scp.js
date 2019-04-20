@@ -1,56 +1,127 @@
 const Discord = require('discord.js');
-const ytdl = require('ytdl-core-discord');
 
 const client = new Discord.Client();
-
 const { TOKEN } = require('./config')
 
 client.login(TOKEN);
 
-const songURL = 'https://www.youtube.com/watch?v=gjQHPblDtd8';
-let savedConnection;
-let voiceChannel;
-let dispatcher;
+// Queue in which order to play
+const soundsQueue = [
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio1.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio2.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio3.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio4.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio5.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio6.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio7.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio8.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio0.ogg",
+  "sounds/scpradio9.ogg"
+];
+
+// Connections map
+let connections = new Map();
 
 client.on('ready', () => {
-  console.log('Ready to play some tunes!');
+  console.log('Radio has entered the facility');
 });
 
-client.on('message', message => {
-  if (message.content.startsWith(".scp")) {
-    if (message.content === '.scp join') {
-      if (message.member.voiceChannel) {
-        message.member.voiceChannel.join()
+// When we recieve a message
+client.on('message', msg => {
+  // If it is a command
+  if (msg.content.startsWith('.scp')) {
+    // If command is to join
+    if (msg.content === '.scp join') {
+      // Check if user is in a voice channel
+      if (msg.member.voiceChannel) {
+        // Connect to VOIP
+        msg.member.voiceChannel.join()
           .then(connection => {
-            savedConnection = connection;
-            voiceChannel = message.member.voiceChannel;
-            play(connection, songURL);
+            connections.set(msg.guild.id, { channel: connection, current: 0 }); // Set required values for guild
+            play(msg.guild.id); // Start playing
           });
       }
-    }
-    if (message.content === '.scp leave') {
-      if (voiceChannel) {
-        voiceChannel.leave();
-        dispatcher.end('Leaving channel on command');
+      else {
+        // Tell user to join a channel
+        msg.reply('Tune to a channel to listen');
       }
+    }
+    // If command is to leave
+    if (msg.content === '.scp leave') {
+      connections.delete(msg.guild.id);
+      msg.reply('Radio has left the facility');
     }
   }
 });
 
-async function play(connection, url) {
+async function play(guild) {
+  // Get the connection
+  let connection = connections.get(guild);
+  // If connection does not exist
+  if (!connection) {
+    connections.delete(guild); // Delete connection
+    return console.error('Tried to play without a connection, deleting connection'); // Return error
+  }
+  // Try playing
   try {
-    dispatcher = connection.playOpusStream(await ytdl(url))
+    // Create dispatcher
+    const dispatcher = connection.channel.playFile(soundsQueue[connection.current], { volume: 0.25 })
       .on('end', reason => {
-        console.log('We ended, starting again! (Or maybe some cruel person stopped us!', reason);
-        play(savedConnection, songURL);
-
+        console.log('Stream ended', reason);
+        connection.current = connection.current + 1; // Shift to next sound in queue
+        if (connection.current > soundsQueue.length) connection.current = 0; // If current is higher than queue lenght, reset it to 0
+        console.log(`Playing ${soundsQueue[connection.current]} in guild ${guild}`);
+        play(guild); // Play again
       })
       .on('error', error => {
-        console.error('Stream died', error);
+        console.error('Dispatcher error', error); // Console log the error
       });
-    dispatcher.setVolume(0.5); // Change volume to half so we don't kill any ears
   }
   catch(error) {
-
+    console.error('Play function error', error); // Console log the error
   }
 }

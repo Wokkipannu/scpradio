@@ -1,7 +1,5 @@
 # SCP Radio
-A Discord bot that has only one purpose. To play the [SCP Radio song](https://www.youtube.com/watch?v=gjQHPblDtd8).
-
-This bot was not created to be used on multiple servers at once and most probably will just break if you try. So 1 bot for 1 server.
+A Discord bot that has only one purpose. To play the [SCP Radio song](https://www.youtube.com/watch?v=gjQHPblDtd8) and few other radio voice lines that are found in SCP: Containment Breach.
 
 # Why?
 Because why not.
@@ -19,7 +17,8 @@ Because why not.
 ```
 - Get your [Discord bot token](https://discordapp.com/developers/applications/)
 - Replace "YOUR-TOKEN-HERE" with your bots token.
-- `node scp`
+- Download [SCP Containment Breach](http://www.scpcbgame.com/) extract it and locate the sounds in `SFX/Radio` and copy every `scpradio` sound to the bots `sounds` folder. Alternatively use your own sounds and replace the soundsQueue in `scp.js`.
+- `npm start`
 
 # Usage
 - .scp join - Starts playing in your current voice channel
