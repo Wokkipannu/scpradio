@@ -5,6 +5,8 @@ const { TOKEN } = require('./config')
 
 client.login(TOKEN);
 
+
+
 // Queue in which order to play
 const soundsQueue = [
   "sounds/scpradio0.ogg",
@@ -54,13 +56,7 @@ const soundsQueue = [
   "sounds/scpradio0.ogg",
   "sounds/scpradio0.ogg",
   "sounds/scpradio0.ogg",
-  "sounds/scpradio8.ogg",
-  "sounds/scpradio0.ogg",
-  "sounds/scpradio0.ogg",
-  "sounds/scpradio0.ogg",
-  "sounds/scpradio0.ogg",
-  "sounds/scpradio0.ogg",
-  "sounds/scpradio9.ogg"
+  "sounds/scpradio8.ogg"
 ];
 
 // Connections map
@@ -78,7 +74,7 @@ client.on('message', msg => {
     if (msg.content === '.scp join') {
       // Check if user is in a voice channel
       if (msg.member.voiceChannel) {
-        // Connect to VOIP
+        // Connect to voice channel
         msg.member.voiceChannel.join()
           .then(connection => {
             connections.set(msg.guild.id, { channel: connection, current: 0 }); // Set required values for guild
@@ -92,9 +88,9 @@ client.on('message', msg => {
     }
     // If command is to leave
     if (msg.content === '.scp leave') {
-      let connection = connections.get(msg.guild.id);
-      connection.channel.leave();
-      connections.delete(msg.guild.id);
+      let connection = connections.get(msg.guild.id); // Get the existing connection
+      connection.channel.leave(); // Leave the channel
+      connections.delete(msg.guild.id); // Delete map
       msg.reply('Radio has left the facility');
     }
   }
