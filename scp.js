@@ -66,7 +66,6 @@ client.on('ready', () => {
 
 // When we recieve a message
 client.on('message', msg => {
-  if (msg.client === client) return; // Don't reply to own messages
   // If it is a command
   if (msg.content.startsWith(PREFIX)) {
     // If command is to join
@@ -90,7 +89,7 @@ client.on('message', msg => {
     if (msg.content === `${PREFIX}leave`) {
       let connection = connections.get(msg.guild.id); // Get the existing connection
       if (!connection) return msg.reply('Radio is not connected'); // If connection does not exist
-      connection.channel.leave(); // Leave the channel
+      connection.channel.channel.leave(); // Leave the channel
       connections.delete(msg.guild.id); // Delete map
       msg.reply('Radio has left the facility');
     }
