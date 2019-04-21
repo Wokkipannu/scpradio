@@ -5,8 +5,6 @@ const { TOKEN } = require('./config')
 
 client.login(TOKEN);
 
-
-
 // Queue in which order to play
 const soundsQueue = [
   "sounds/scpradio0.ogg",
@@ -97,29 +95,35 @@ client.on('message', msg => {
 });
 
 async function play(guild) {
-  // Get the connection
-  let connection = connections.get(guild);
-  // If connection does not exist
-  if (!connection) {
-    connections.delete(guild); // Delete connection
-    return console.error('Tried to play without a connection, deleting connection'); // Return error
-  }
-  // Try playing
   try {
-    // Create dispatcher
-    const dispatcher = connection.channel.playFile(soundsQueue[connection.current], { volume: 0.25 })
-      .on('end', reason => {
-        console.log('Stream ended', reason);
-        connection.current = connection.current + 1; // Shift to next sound in queue
-        if (connection.current > soundsQueue.length) connection.current = 0; // If current is higher than queue lenght, reset it to 0
-        console.log(`Playing ${soundsQueue[connection.current]} in guild ${guild}`);
-        play(guild); // Play again
-      })
-      .on('error', error => {
-        console.error('Dispatcher error', error); // Console log the error
-      });
+    // Get the connection
+    let connection = connections.get(guild);
+    // If connection does not exist
+    if (!connection) {
+      connections.delete(guild); // Delete connection
+      return console.error('Tried to play without a connection, deleting connection'); // Return error
+    }
+
+    // Try playing
+    try {
+      // Create dispatcher
+      const dispatcher = connection.channel.playFile(soundsQueue[connection.current], { volume: 0.25 })
+        .on('end', reason => {
+          console.log('Stream ended', reason);
+          connection.current = connection.current + 1; // Shift to next sound in queue
+          if (connection.current > soundsQueue.length - 1) connection.current = 0; // If current is higher than queue lenght, reset it to 0
+          console.log(`Playing ${soundsQueue[connection.current]} in guild ${guild}`);
+          play(guild); // Play again
+        })
+        .on('error', error => {
+          console.error('Dispatcher error', error); // Console log the error
+        });
+    }
+    catch(error) {
+      console.error('Play function error', error); // Console log the error
+    }
   }
   catch(error) {
-    console.error('Play function error', error); // Console log the error
+    console.error('Failed to get connection', error);
   }
 }
