@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 
 const client = new Discord.Client();
-const { TOKEN } = require('./config')
+const { TOKEN, PREFIX } = require('./config')
 
 client.login(TOKEN);
 
@@ -66,12 +66,14 @@ client.on('ready', () => {
 
 // When we recieve a message
 client.on('message', msg => {
+  if (msg.client === client) return; // Don't reply to own messages
   // If it is a command
-  if (msg.content.startsWith('.scp')) {
+  if (msg.content.startsWith(PREFIX)) {
     // If command is to join
-    if (msg.content === '.scp join') {
+    if (msg.content === `${PREFIX}join`) {
       // Check if user is in a voice channel
       if (msg.member.voiceChannel) {
+        if (connections.get(msg.guild.id)) return msg.reply('Radio is already playing in a channel. Use `.scp leave` first and then use `.scp join` to make me join a new channel.');
         // Connect to voice channel
         msg.member.voiceChannel.join()
           .then(connection => {
@@ -85,8 +87,9 @@ client.on('message', msg => {
       }
     }
     // If command is to leave
-    if (msg.content === '.scp leave') {
+    if (msg.content === `${PREFIX}leave`) {
       let connection = connections.get(msg.guild.id); // Get the existing connection
+      if (!connection) return msg.reply('Radio is not connected'); // If connection does not exist
       connection.channel.leave(); // Leave the channel
       connections.delete(msg.guild.id); // Delete map
       msg.reply('Radio has left the facility');
