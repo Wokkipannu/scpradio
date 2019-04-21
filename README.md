@@ -12,8 +12,7 @@ Because why not.
 - Create `config.json` in the root directory and paste the following.
 ```
 {
-  "TOKEN": "YOUR-TOKEN-HERE",
-  "PREFIX": "YOUR-PREFIX-HERE"
+  "TOKEN": "YOUR-TOKEN-HERE"
 }
 ```
 - Get your [Discord bot token](https://discordapp.com/developers/applications/)
