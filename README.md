@@ -18,7 +18,7 @@ Because why not.
 ```
 - Get your [Discord bot token](https://discordapp.com/developers/applications/)
 - Replace "YOUR-TOKEN-HERE" with your bots token.
-- Download [SCP Containment Breach](http://www.scpcbgame.com/) extract it and locate the sounds in `SFX/Radio` and copy every `scpradio` sound to the bots `sounds` folder. Alternatively use your own sounds and replace the soundsQueue in `scp.js`.
+- Download [SCP Containment Breach](http://www.scpcbgame.com/) extract it and locate the sounds in `SFX/Radio` and copy every `scpradio` sound to the bots `sounds` folder. Alternatively use your own sounds and replace the sounds in `commands/join.js`.
 - `npm start`
 
 # Usage
