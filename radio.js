@@ -21,7 +21,6 @@ class Radio extends Discord.Client {
       dirname: path.join(__dirname, 'commands'),
       resolve: function(Command) {
         that.commands.set(Command.name, new Command(that));
-        //that.commands.push(new Command(that));
       }
     })
   }
@@ -30,7 +29,10 @@ class Radio extends Discord.Client {
     try {
       if (msg.content.startsWith(this.prefix)) {
         const command = this.commands.get(this.capitalize(msg.content.split(this.prefix)[1]) + 'Command');
-        if (command) return command.run(msg);
+        if (command) {
+          this.emit('command', msg, command);
+          return command.run(msg);
+        }
       }
     }
     catch(error) {
