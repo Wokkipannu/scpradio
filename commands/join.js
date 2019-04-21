@@ -30,7 +30,7 @@ class JoinCommand {
       }
 
       try {
-        const dispatcher = connection.playOpusStream(await ytdl('https://www.youtube.com/watch?v=SuKH17fNTEY'))
+        const dispatcher = connection.playOpusStream(await ytdl('https://www.youtube.com/watch?v=SuKH17fNTEY'), { volume: 0.1 })
           .on('end', reason => {
             if (reason === 'leavecmd') return;
             this.play(msg);
