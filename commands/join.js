@@ -1,60 +1,10 @@
-const moment = require('moment');
+const ytdl = require('ytdl-core-discord');
 
 class JoinCommand {
   constructor(client) {
     this.client = client;
     this.name = 'join';
     this.connections = new Map();
-    this.sounds = [
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio1.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio2.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio3.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio4.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio5.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio6.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio7.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio0.ogg",
-      "sounds/scpradio8.ogg"
-    ];
   }
 
   run(msg) {
@@ -62,7 +12,7 @@ class JoinCommand {
       if (this.connections.get(msg.guild.id)) return msg.reply('Connection already exists, cannot start a new one');
       msg.member.voiceChannel.join()
         .then(connection => {
-          this.connections.set(msg.guild.id, { voice: connection, current: 0 });
+          this.connections.set(msg.guild.id, connection);
           this.play(msg);
         });
     }
@@ -80,13 +30,10 @@ class JoinCommand {
       }
 
       try {
-        const dispatcher = connection.voice.playFile(this.sounds[connection.current], { volume: 0.1})
+        const dispatcher = connection.playOpusStream(await ytdl('https://www.youtube.com/watch?v=SuKH17fNTEY'))
           .on('end', reason => {
             if (reason === 'leavecmd') return;
-            connection.current = connection.current + 1;
-            if (connection.current > this.sounds - 1) connection.current = 0;
-            this.client.logger.log(`Playing ${this.sounds[connection.current]} in guild ${msg.guild.name} (${msg.guild.id})`);
-            this.play(msg.guild.id);
+            this.play(msg);
           })
           .on('error', error => {
             console.error('Dispatcher error', error);
