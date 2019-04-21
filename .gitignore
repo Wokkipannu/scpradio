@@ -78,5 +78,8 @@ typings/
 # Configuration
 config.json
 
-# Do not include sounds
+# Sounds
 sounds/*
+
+# FFMPEG
+ffmpeg.exe
