@@ -8,7 +8,7 @@ class TimeCommand {
     const connection = await this.connections.get(msg.guild.id);
     if (!connection) return msg.reply('Radio is not connected');
 
-    msg.reply(`Radio has been playing for ${this.timeFormat(connection.dispatcher.time / 1000)} (${connection.dispatcher.time / 1000})`);
+    msg.reply(`Radio has been playing for ${this.timeFormat(connection.dispatcher.time / 1000)}`);
   }
 
   timeFormat(time) {
