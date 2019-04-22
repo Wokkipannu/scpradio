@@ -13,7 +13,6 @@ const client = new Radio({
 
 client
   .on('ready', () => logger.log('Ready!'))
-  .on('message', msg => logger.log(`${msg.author.username}: ${msg.content}`))
   .on('command', (msg, cmd) => logger.log(`${msg.author.username} ran command ${cmd.name}`));
 
 client.login(TOKEN);
