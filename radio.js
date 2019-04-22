@@ -6,6 +6,7 @@ class Radio extends Discord.Client {
     super();
     this.prefix = options.prefix || '!';
     this.logger = options.logger;
+    this.admins = options.admins;
 
     this.commands = new Map();
     this.commandsPath = options.commandsPath || 'commands';

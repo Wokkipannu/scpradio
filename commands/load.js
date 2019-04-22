@@ -8,6 +8,8 @@ module.exports = class LoadCommand {
   }
 
   run(msg, args) {
+    if(!this.client.admins.includes(msg.author.id)) return; // Admin only command
+
     if (args) {
       try {
         const Command = require(path.join(__dirname, args[0]));

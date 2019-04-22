@@ -8,6 +8,8 @@ module.exports = class ReloadCommand {
   }
 
   run(msg, args) {
+    if(!this.client.admins.includes(msg.author.id)) return; // Admin only command
+
     if (args) {
       try {
         delete require.cache[require.resolve(path.join(__dirname, args[0]))];
