@@ -1,7 +1,8 @@
-class LeaveCommand {
+module.exports = class LeaveCommand {
   constructor(client) {
     this.client = client;
     this.name = 'leave';
+    this.description = 'Leave the channel and stop playing';
   }
 
   async run(msg) {
@@ -18,5 +19,3 @@ class LeaveCommand {
     return this.client.commands.get('JoinCommand').connections;
   }
 }
-
-module.exports = LeaveCommand;
