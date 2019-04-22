@@ -1,9 +1,10 @@
 const ytdl = require('ytdl-core-discord');
 
-class JoinCommand {
+module.exports = class JoinCommand {
   constructor(client) {
     this.client = client;
     this.name = 'join';
+    this.description = 'Join a channel and start playing';
     this.connections = new Map();
   }
 
@@ -49,5 +50,3 @@ class JoinCommand {
     }
   }
 }
-
-module.exports = JoinCommand;
