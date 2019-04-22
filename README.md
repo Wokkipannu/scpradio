@@ -1,9 +1,6 @@
 # SCP Radio
 A Discord bot that has only one purpose. To play the [SCP Radio song](https://www.youtube.com/watch?v=SuKH17fNTEY).
 
-# Why?
-Because why not.
-
 # Requirements and installation
 - Node.js 6.0.0 or newer
 
@@ -19,6 +16,26 @@ Because why not.
 - Replace "YOUR-TOKEN-HERE" with your bots token.
 - `npm start`
 
-# Usage
-- .scp join - Starts playing in your current voice channel
-- .scp leave - Leaves channel and stops playing
+# Commands
+- (prefix)join - Starts playing in your current voice channel
+- (prefix)leave - Leaves channel and stops playing
+- (prefix)volume <value> - Sets currently playing streams value
+- (prefix)time - Tells how long stream has been playing for
+- (prefix)load - Load a new command
+- (prefix)reload - Reload a command
+- (prefix)help - Display list of commands
+
+# Custom commands
+You can create custom commands. The class name should contain "Command" at the end or else it will not be loaded. Here is an example.
+```
+module.exports = class MyCommand {
+  constructor(client) {
+    this.client = client;
+    this.name = 'mycoolcustomcommand';
+  }
+
+  run(msg) {
+    // Do something cool
+  }
+}
+```
