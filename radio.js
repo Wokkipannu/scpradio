@@ -7,7 +7,6 @@ class Radio extends Discord.Client {
     this.prefix = options.prefix || '!';
     this.logger = options.logger;
 
-    //this.commands = [];
     this.commands = new Map();
     this.commandsPath = options.commandsPath || 'commands';
     this.registerCommands();
@@ -18,7 +17,7 @@ class Radio extends Discord.Client {
   registerCommands() {
     let that = this;
     require('require-all')({
-      dirname: path.join(__dirname, 'commands'),
+      dirname: path.join(__dirname, this.commandsPath),
       resolve: function(Command) {
         that.commands.set(Command.name, new Command(that));
       }
@@ -28,10 +27,13 @@ class Radio extends Discord.Client {
   handleMessage(msg) {
     try {
       if (msg.content.startsWith(this.prefix)) {
-        const command = this.commands.get(this.capitalize(msg.content.split(this.prefix)[1]) + 'Command');
+        const args = msg.content.slice(this.prefix).trim().split(/ +/g);
+        const cmd = args.shift().split(this.prefix)[1].toLowerCase();
+
+        const command = this.commands.get(this.capitalize(cmd) + 'Command');
         if (command) {
           this.emit('command', msg, command);
-          return command.run(msg);
+          return command.run(msg, args);
         }
       }
     }
