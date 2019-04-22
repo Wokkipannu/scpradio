@@ -1,14 +1,15 @@
-class TimeCommand {
+module.exports = class TimeCommand {
   constructor(client) {
     this.client = client;
     this.name = 'time';
+    this.description = 'Display how long the bot has been playing in a channel';
   }
 
   async run(msg) {
     const connection = await this.connections.get(msg.guild.id);
     if (!connection) return msg.reply('Radio is not connected');
 
-    msg.reply(`Radio has been playing for ${this.timeFormat(connection.dispatcher.time / 1000)}`);
+    return msg.reply(`Radio has been playing for ${this.timeFormat(connection.dispatcher.time / 1000)}`);
   }
 
   timeFormat(time) {
@@ -32,5 +33,3 @@ class TimeCommand {
     return this.client.commands.get('JoinCommand').connections;
   }
 }
-
-module.exports = TimeCommand;
