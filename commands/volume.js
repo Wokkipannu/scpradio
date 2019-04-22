@@ -1,7 +1,8 @@
-class VolumeCommand {
+module.exports = class VolumeCommand {
   constructor(client) {
     this.client = client;
     this.name = 'volume';
+    this.description = 'Change the volume of current session';
   }
 
   async run(msg) {
@@ -19,5 +20,3 @@ class VolumeCommand {
     return this.client.commands.get('JoinCommand').connections;
   }
 }
-
-module.exports = VolumeCommand;
