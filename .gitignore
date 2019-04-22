@@ -78,8 +78,5 @@ typings/
 # Configuration
 config.json
 
-# Sounds
-sounds/*
-
 # FFMPEG
 ffmpeg.exe
