@@ -32,10 +32,11 @@ module.exports = class MyCommand {
   constructor(client) {
     this.client = client;
     this.name = 'mycoolcustomcommand';
+    this.description = 'My cool custom command description';
   }
 
-  run(msg) {
-    // Do something cool
+  run(msg, args) {
+    return msg.reply(`Got message ${msg.content}\nGot args ${args.join(", ")}`);
   }
 }
 ```
