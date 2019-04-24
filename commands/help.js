@@ -1,4 +1,4 @@
-const { RichEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = class HelpCommand {
   constructor(client) {
@@ -8,7 +8,7 @@ module.exports = class HelpCommand {
   }
 
   run(msg) {
-    let embed = new RichEmbed()
+    let embed = new MessageEmbed()
       .setColor('3bff00')
       .setTitle('Commands');
 
