@@ -9,9 +9,10 @@ module.exports = class JoinCommand {
   }
 
   run(msg) {
-    if (msg.member.voiceChannel) {
+    if (msg.member.voice.channel) {
       if (this.connections.get(msg.guild.id)) return msg.reply('Connection already exists, cannot start a new one');
-      msg.member.voiceChannel.join()
+      msg.channel.send('Let\'s play some tunes! :pepeJAM:');
+      msg.member.voice.channel.join()
         .then(connection => {
           this.connections.set(msg.guild.id, connection);
           this.play(msg);
@@ -31,7 +32,7 @@ module.exports = class JoinCommand {
       }
 
       try {
-        const dispatcher = connection.playOpusStream(await ytdl('https://www.youtube.com/watch?v=SuKH17fNTEY'), { volume: 0.1 })
+        const dispatcher = connection.play(await ytdl('https://www.youtube.com/watch?v=SuKH17fNTEY'), { type: 'opus', volume: 0.1 })
           .on('end', reason => {
             if (reason === 'leavecmd') return;
             this.play(msg);
