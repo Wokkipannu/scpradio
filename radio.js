@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const path = require('path');
 
-class Radio extends Discord.Client {
+module.exports = class Radio extends Discord.Client {
   constructor(options = {}) {
     super();
     this.prefix = options.prefix || '!';
@@ -48,5 +48,3 @@ class Radio extends Discord.Client {
     return word.charAt(0).toUpperCase() + word.slice(1);
   }
 }
-
-module.exports = Radio;
