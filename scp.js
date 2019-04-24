@@ -12,7 +12,10 @@ const client = new Radio({
 });
 
 client
-  .on('ready', () => logger.log('Ready!'))
+  .on('ready', () => {
+    logger.log('Ready to play some tunes');
+    client.user.setActivity('::help', { type: 'PLAYING' });
+  })
   .on('command', (msg, cmd) => logger.log(`${msg.author.username} ran command ${cmd.name}`));
 
 client.login(TOKEN);
