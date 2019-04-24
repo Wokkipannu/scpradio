@@ -5,8 +5,9 @@ class Logger {
     this.format = options.format || 'DD.MM.YYYY HH.mm.ss'
   }
 
-  log(message) {
-    console.log(`[${moment().format(this.format)}] ${message}`);
+  log(message, param) {
+    if (param) console.log(`[${moment().format(this.format)}] ${message}`, param);
+    else console.log(`[${moment().format(this.format)}] ${message}`);
   }
 }
 
