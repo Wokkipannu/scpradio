@@ -2,7 +2,7 @@
 A Discord bot that has only one purpose. To play the [SCP Radio song](https://www.youtube.com/watch?v=SuKH17fNTEY).
 
 # Requirements and installation
-- Node.js 6.0.0 or newer
+- Node.js 10.0.0 or newer
 
 - Clone repository
 - Run `npm install`
@@ -14,6 +14,7 @@ A Discord bot that has only one purpose. To play the [SCP Radio song](https://ww
 ```
 - Get your [Discord bot token](https://discordapp.com/developers/applications/)
 - Replace "YOUR-TOKEN-HERE" with your bots token.
+- Install [ffmpeg](https://ffmpeg.org/download.html)
 - `npm start`
 
 # Commands
