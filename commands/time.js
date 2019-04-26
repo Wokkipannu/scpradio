@@ -9,24 +9,14 @@ module.exports = class TimeCommand {
     const connection = await this.connections.get(msg.guild.id);
     if (!connection) return msg.reply('Radio is not connected');
 
-    return msg.reply(`Radio has been playing for ${this.timeFormat(connection.dispatcher.time / 1000)}`);
+    return msg.reply(this.timeString(connection.dispatcher.totalStreamTime / 1000));
   }
 
-  timeFormat(time) {
-    let hrs = ~~(time / 3600);
-    let mins = ~~((time % 3600) / 60);
-    let secs = ~~time % 60;
-
-    let ret = "";
-
-    if (hrs > 0) {
-      ret += "" + hrs + ":" + (mins < 10 ? 0 : '');
-    }
-
-    ret += "" + mins + ":" + (secs < 10 ? "0" : "");
-    ret += "" + secs;
-
-    return ret;
+  timeString(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor(seconds % 3600 / 60);
+    
+    return `${hours >= 1 ? `${hours}:` : ''}${hours >= 1 ? `0${minutes}`.slice(-2) : minutes}:${`0${Math.floor(seconds % 60)}`.slice(-2)}`;
   }
 
   get connections() {
