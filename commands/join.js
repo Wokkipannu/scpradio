@@ -8,10 +8,10 @@ module.exports = class JoinCommand {
     this.connections = new Map();
   }
 
-  run(msg) {
+  run(msg, args) {
     if (msg.member.voice.channel) {
       if (this.connections.get(msg.guild.id)) return msg.reply('Connection already exists, cannot start a new one');
-      msg.channel.send('Let\'s play some tunes! :pepeJAM:');
+      //msg.channel.send('Let\'s play some tunes! :pepeJAM:');
       msg.member.voice.channel.join()
         .then(connection => {
           this.connections.set(msg.guild.id, connection);
@@ -19,7 +19,19 @@ module.exports = class JoinCommand {
         });
     }
     else {
-      return msg.reply('Join a voice channel first');
+      if (args[0]) {
+        let voiceChannel = msg.guild.channels.find(ch => ch.id === args[0]);
+        if (!voiceChannel) return msg.reply('No voice channel found with given ID');
+
+        voiceChannel.join()
+          .then(connection => {
+            this.connections.set(msg.guild.id, connection);
+            this.play(msg);
+          });
+      }
+      else {
+        return msg.reply('Join a voice channel first');
+      }
     }
   }
 
