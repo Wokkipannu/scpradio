@@ -6,60 +6,43 @@ module.exports = class JoinCommand {
     this.name = 'join';
     this.description = 'Join a channel and start playing';
     this.connections = new Map();
+    this.radioSongURL = 'https://www.youtube.com/watch?v=SuKH17fNTEY';
   }
 
-  run(msg, args) {
-    if (msg.member.voice.channel) {
-      if (this.connections.get(msg.guild.id)) return msg.reply('Connection already exists, cannot start a new one');
-      //msg.channel.send('Let\'s play some tunes! :pepeJAM:');
-      msg.member.voice.channel.join()
-        .then(connection => {
-          this.connections.set(msg.guild.id, connection);
-          this.play(msg);
-        });
-    }
-    else {
-      if (args[0]) {
-        let voiceChannel = msg.guild.channels.find(ch => ch.id === args[0]);
-        if (!voiceChannel) return msg.reply('No voice channel found with given ID');
+  async run(msg, args) {
+    let voiceChannel = msg.member.voice.channel;
 
-        voiceChannel.join()
-          .then(connection => {
-            this.connections.set(msg.guild.id, connection);
-            this.play(msg);
-          });
+    if (!voiceChannel) {
+      if (args[0]) {
+        voiceChannel = msg.guild.channels.find(ch => ch.id === args[0]);
+        if (!voiceChannel) return msg.reply('No voice channel found with the given ID');
       }
       else {
-        return msg.reply('Join a voice channel first');
+        return msg.reply('Connect to a voice channel to use the command');
       }
     }
+
+    await voiceChannel.join()
+      .then(connection => {
+        this.connections.set(msg.guild.id, connection);
+        this.play(msg);
+      });
   }
 
   async play(msg) {
-    try {
-      let connection = this.connections.get(msg.guild.id);
-      if (!connection) {
-        this.connections.delete(msg.guild.id);
-        return console.error('Tried to play without a connection, deleting connection');
-      }
+    let connection = await this.connections.get(msg.guild.id);
+    if (!connection) {
+      await this.connections.delete(msg.guild.id);
+      return console.log('Connection no longer exists. Deleting it.');
+    }
 
-      try {
-        const dispatcher = connection.play(await ytdl('https://www.youtube.com/watch?v=SuKH17fNTEY'), { type: 'opus', volume: 0.1 })
-          .on('end', reason => {
-            if (reason === 'leavecmd') return;
-            this.play(msg);
-          })
-          .on('error', error => {
-            console.error('Dispatcher error', error);
-          });
-      }
-      catch(error) {
-        console.error('Play function error', error);
-      }
-    }
-    catch(error) {
-      this.connections.delete(msg.guild.id);
-      console.error('Failed to get connection', error);
-    }
+    const dispatcher = await connection.play(await ytdl(this.radioSongURL), { type: 'opus', volume: 0.1 })
+      .on('end', reason => {
+        if (reason === 'leavecmd') return;
+        this.play(msg);
+      })
+      .on('error', error => {
+        console.log('Dispatcher error', error);
+      });
   }
 }
